@@ -1,0 +1,49 @@
+version: '3'
+services:
+  mongodb:
+    image: "mongo"
+    container_name: mongodb
+    volumes:
+      - ./data:/data/db
+    restart: always
+    ports:
+      - "27017:27017"
+    networks:
+      - abc
+  
+  server:
+    build: ./server
+    ports:
+      - 3001:3001
+    depends_on:
+      - mongodb
+    restart: always
+    environment:
+      - MONGOURL='mongodb://mongodb:27017/LectureSchedule'
+    networks:
+      - abc
+
+  client:
+    build: ./client
+    restart: always
+    depends_on:
+      - server
+    networks:
+      - abc
+    ports:
+      - 3000:3000
+    stdin_open: true
+    tty: true
+
+networks:
+  abc:
+volumes:
+  data:
+  logs:
+    
+
+  
+
+
+
+
